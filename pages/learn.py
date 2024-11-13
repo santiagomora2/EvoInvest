@@ -10,7 +10,7 @@ with st.sidebar:
 
     st.page_link("app.py", label="Regresar a Inicio", icon="🏠")
 
-    st.page_link("pages/learn.py", label="Aprende Cómo Funciona", icon="🧠")
+    st.page_link("pages/popt.py", label="Genera Portafolios!", icon="📈")
 
 if tab == 'Algoritmo Genético':
 
