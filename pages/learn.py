@@ -118,20 +118,17 @@ elif tab == 'Prueba Algoritmo Genético':
     st.markdown('''
 #### Prueba el algoritmo genético!
                 
-En este **ejemplo** sencillo, introduce una palabra que el **algoritmo** deberá **encontrar**. Ajusta los **parámetros** del algoritmo y observa cómo el **algoritmo** se acerca a la palabra en cada iteración.
-
-En este caso, la **función de fitness** es el número de letras que cada individuo comparte con la **palabra objetivo**.           
-                
+En este **ejemplo** sencillo, introduce una palabra que el **algoritmo** deberá **encontrar**. Ajusta los **parámetros** del algoritmo y observa cómo el **algoritmo** se acerca a la palabra en cada iteración.                
 ''')
 
     st.sidebar.header("Parámetros del Algoritmo Genético")
 
     # Parámetros del algoritmo genético
     target_word = st.sidebar.text_input("Palabra Objetivo", "GENETICA")
-    population_size = st.sidebar.slider("Tamaño de la Población", 10, 200, 100)
+    population_size = st.sidebar.slider("Tamaño de la Población", 10, 200, 50)
     num_generations = st.sidebar.slider("Número de Generaciones", 1, 500, 100)
     mutation_rate = st.sidebar.slider("Tasa de Mutación", 0.0, 1.0, 0.05)
-    print_every = st.sidebar.number_input("Imprimir cada cuántas generaciones", min_value=1, value=5, step=1)
+    print_every = st.sidebar.number_input("Imprimir cada cuántas generaciones", min_value=1, value=3, step=1)
 
     # Configuraciones iniciales
     target_word = target_word.upper()
@@ -179,6 +176,7 @@ En este caso, la **función de fitness** es el número de letras que cada indivi
 
     # Botón para iniciar la simulación
     if st.button("Ejecutar Algoritmo Genético"):
+
         # Generación inicial
         population = generate_population(population_size, word_length)
         best_match = ""
@@ -201,3 +199,17 @@ En este caso, la **función de fitness** es el número de letras que cada indivi
         # Mostrar el mejor resultado final si no se alcanzó el objetivo
         if best_match != target_word:
             st.write(f"**Mejor combinación final** después de {num_generations} generaciones: `{best_match}` - Aptitud: {fitness(best_match, target_word)}")
+
+        st.markdown(f'''
+#### ¿Qué es lo que está pasando?
+                    
+1. Se **generan {population_size}** palabras **(individuos)** de {len(target_word)} caracteres, con letras **aleatorias**.
+
+2. De estos individuos, se **evalúan** cuántas letras comparten con {target_word}, y ese es el **valor de fitness** de cada palabra.
+
+3. Se **seleccionan** los individuos con base en su **fitness** y, como en la naturaleza, sobreviven los **más aptos**.
+
+4. Se **reproducen** con cierta probabilidad y los nuevos individuos tienen una pequeña probabilidad de **mutar** uno de sus **genes** (letras de la palabra).
+
+5. Se **repite** este proceso desde el paso 2, con cada **nueva población**, hasta obtener el **mayor fitness** o, en este caso, llegar a la palabra {target_word}.
+''')
