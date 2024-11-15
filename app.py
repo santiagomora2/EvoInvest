@@ -31,71 +31,64 @@ def main():
 
     # Custom HTML with inline styling
     html_code = """
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <style>
-            /* Full-screen animated background */
-            body {
-                background-image: url('https://media4.giphy.com/media/xTiTnxpQ3ghPiB2Hp6/giphy.gif?cid=6c09b95219sdvq77x4l0mzc1omfnw4yceualg0y556obpxif&ep=v1_internal_gif_by_id&rid=giphy.gif&ct=g'); /* Replace with your animated image URL */
-                background-size: cover;
-                background-attachment: fixed;
-                height: 100vh;
-                margin: 0;
-                font-family: Arial, sans-serif;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                overflow: hidden;
-            }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        /* Full-screen animated background */
+        body {
+            background-image: url('https://media4.giphy.com/media/xTiTnxpQ3ghPiB2Hp6/giphy.gif?cid=6c09b95219sdvq77x4l0mzc1omfnw4yceualg0y556obpxif&ep=v1_internal_gif_by_id&rid=giphy.gif&ct=g'); /* Replace with your animated image URL */
+            background-size: cover;
+            background-attachment: fixed;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
 
-            /* Container for the title and divider */
-            .container {
-                position: relative;
-                text-align: center;
-                color: white;
-                max-width: 1000px;
-                width: 100%;
-            }
+        /* Container for the title and divider */
+        .container {
+            position: relative;
+            text-align: center;
+            color: white;
+            max-width: 1000px;
+            width: 100%;
+        }
 
-            /* Vertical divider line */
-            .line {
-                border-left: 2px solid white;
-                height: 90vh; /* Adjust height as needed */
-                position: absolute;
-                left: 50%;
-                transform: translateX(-50%);
-            }
+        /* Horizontal divider line */
+        .line {
+            border-top: 2px solid white;
+            width: 80%; /* Adjust width as needed */
+            margin: 20px auto; /* Adds spacing above and below */
+        }
 
-            /* Big title text on the left */
-            .big-title {
-                font-size: 50px;
-                font-weight: bold;
-                position: absolute;
-                left: 25%; /* Adjust left alignment */
-                transform: translateX(-50%);
-                top: 15%;
-            }
+        /* Big title text on top */
+        .big-title {
+            font-size: 50px;
+            font-weight: bold;
+            margin-bottom: 20px; /* Adds spacing below the title */
+        }
 
-            /* Small title text on the right */
-            .small-title {
-                font-size: 20px;
-                position: absolute;
-                left: 70%; /* Adjust right alignment */
-                transform: translateX(-50%);
-                top: 15%;
-            }
+        /* Small title text below */
+        .small-title {
+            font-size: 20px;
+            margin-top: 20px; /* Adds spacing above the subtitle */
+        }
 
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="big-title">EvoInvest</div>
-            <div class="line"></div>
-            <div class="small-title">Evoluciona tu portafolio con optimización financiera inteligente.</div>
-        </div>
-    </body>
-    </html>
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="big-title">EvoInvest</div>
+        <div class="line"></div>
+        <div class="small-title">Evoluciona tu portafolio con optimización financiera inteligente.</div>
+    </div>
+</body>
+</html>
+
     """
 
     # Display the custom HTML in Streamlit
