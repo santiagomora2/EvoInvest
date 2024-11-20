@@ -26,6 +26,7 @@ tickers = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'META', 'NVDA', 'BRK-B', 'JN
        'GE', 'PYPL', 'ELV', 'ZTS', 'ADI', 'SYK', 'DUK', 'EW', 'SO', 'CL',
        'VRTX', 'FIS', 'ICE', 'APD', 'ETN', 'SHW', 'CCI', 'GM']
 
+
 ############ Data functions ##############3
 def obtain_from_yahoo(years_backwards, tickers = tickers):
     end_date = datetime.today()
@@ -34,7 +35,7 @@ def obtain_from_yahoo(years_backwards, tickers = tickers):
     for ticker in tickers:
         data = yf.download(ticker, start = start_date, end = end_date)
         df[ticker] = data['Adj Close']
-    return df
+    return df.dropna(axis=1)
 
 def log_returns_covariance_matrix(df):
     log_returns = np.log(df / df.shift(1)) # ln (precio de día n - precio del día n-1)
@@ -271,7 +272,7 @@ def main():
             log_returns, cov_matrix = log_returns_covariance_matrix(df)
 
         with st.spinner('Ejecutando Algoritmo Genético (ya casi!)'):
-            pareto_solutions, pareto_values = geneticAlgorithm_multiobjective(len(tickers), pop_size, crossover_rate, mutation_rate, generations, log_returns, cov_matrix)
+            pareto_solutions, pareto_values = geneticAlgorithm_multiobjective(len(df.columns), pop_size, crossover_rate, mutation_rate, generations, log_returns, cov_matrix)
             
             values, solutions = sort_pareto_values_and_solutions(pareto_values, pareto_solutions)
 
@@ -308,18 +309,28 @@ def main():
             with cols[1]:
                 ui.metric_card(title="Top 3 Acciones", content=f'{top3[0]}, {top3[1]}, {top3[2]}', description="Con más peso en el portafolio", key="card3")
 
-
-            st.write('Peso de cada acción en el total del presupuesto del portafolio:\n\n')
-
             st.bar_chart(single_sol, x = 'Asset', y='Weight', horizontal = True, color='#000000')
+
+            with st.expander('Más información'):
+                st.markdown('''
+                La gráfica arriba muestra el peso de cada acción en el total del presupuesto del portafolio. Las
+                acciones con más peso son en las que más se deberá invertir el dinero destinado a esta inversión.
+                Nótese que las acciones con menor riesgo generalmente distribuyen el dinero más equitativamente que
+                las que tienen un gran retorno esperado.
+                ''')
             
             # Plot and display the Pareto front
             retris = plot_pareto_front(returns, risks)
             st.subheader('\nVisualización de soluciones en el frente de Pareto:')
 
-            st.write("Cada punto es una solución diferente en el frente de Pareto estimado, con sus propio retorno y riesgo.\n\n")
-
             st.scatter_chart(retris, x = 'Return', y = 'Risk', color='#000000')
+
+            with st.expander('Más información'):
+                st.markdown('''
+                en la gráfica de arriba, cada punto es una solución diferente en el frente de Pareto estimado, con sus propio retorno y riesgo.
+                Los puntos más hacia la izquierda y abajo son aquellos con menor riesgo y retorno, y mientras más arriba y 
+                a la derecha, más retorno y riesgo.
+                ''')
             
             st.info('Si deseas intentar otros parámetros para el AG, dale *refresh* a la página', icon="ℹ️")
 

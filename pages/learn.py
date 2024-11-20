@@ -1,10 +1,12 @@
 import streamlit as st
 import streamlit_shadcn_ui as ui
 import numpy as np
+import pandas as pd
+import altair as alt
 
 st.header('EvoInvest - Aprendizaje')
 
-tab = ui.tabs(options=['Algoritmo Genético', 'Conceptos Financieros / Fórmulas', 'Prueba Algoritmo Genético'], default_value='Algoritmo Genético', key="tabs_learn")
+tab = ui.tabs(options=['Algoritmo', 'Fórmulas', 'Prueba AG!'], default_value='Algoritmo', key="tabs_learn")
 
 with st.sidebar:
 
@@ -12,7 +14,7 @@ with st.sidebar:
 
     st.page_link("pages/popt.py", label="Genera Portafolios!", icon="📈")
 
-if tab == 'Algoritmo Genético':
+if tab == 'Algoritmo':
 
     st.markdown('''#### ¿Qué es un Algoritmo Genético?
                 
@@ -41,79 +43,122 @@ La optimización multiobjetivo busca soluciones que **equilibren** dos o más ob
 #### Frente de Pareto
                 
 Un concepto clave en la optimización de portafolios es el **frente de Pareto**. Esta es una gráfica que muestra las **mejores combinaciones** de riesgo y retorno para un conjunto de activos. Los puntos en el frente representan **portafolios “eficientes”** que ofrecen el máximo retorno posible para un nivel de riesgo dado, o el riesgo mínimo para un nivel de retorno.
+
+#### Ejemplo de un Frente de Pareto                
 ''')
-
-elif tab == 'Conceptos Financieros / Fórmulas':
-
-    st.markdown('''
-#### Retornos
-                
-Los retornos de cada stock se calculan de la siguiente manera:
-                
-$\mu_i = \ln{(v_t - v_{t-1})}$
-                
-* Donde:
-    * $\mu_i$: Retorno esperado del stock $i$
-    * $v_t$: Valor del stock en el tiempo $t$
-    * $v_{t-1}$: Valor del stock en el tiempo $t-1$
-
-Con los retornos de cada stock en cada día, se define una matriz de retornos $\Mu$.
-                
-#### Riesgo
-                
-El riesgo entre dos stocks diferentes se obtiene calculando la matriz de covarianza:
-                
-$\Sigma = \mathbb{Cov}(\Mu)$
-                
-* Donde:
-    * $M$: matriz de retornos
-    * $\Sigma$: Matriz de covarianza de $M$
-    * $\Sigma_{i, j}$: covarianza (riesgo) entre el stock $i$ y el $j$
-                
-#### Métricas del portafolio
-                
-Una vez definidos los retornos y riesgos de cada stock, se usa el AG para optimizar los pesos de cada stock en el portafolio, utilizando las siguientes métricas:
-                
-##### Retorno de inversión:
-                
-$ R = \sum_{i=n}^{n}w_i \mu_i$
-
-* Donde:
-    * $R$: Retorno de inversión del portafolio
-    * $w_i$: Peso asociado al stock $i$
-    * $\mu_i$: Retorno esperado del stock $i$
-
-##### Riesgo asociado:
-
-$ \sigma = W \Sigma W^T$
-
-* Donde:
-    * $\sigma$: Desviación estándar asociada al portafolio
-    * $W$: Vector de pesos del portafolio
-    * $\Sigma$: Matriz de covarianza de $\Mu$
-                
-##### Sharpe Ratio
-                
-$ {(\sum_{i=n}^{n}w_i \mu_i - r)}/{\sigma}$
-
-* Donde:
-    * $w_i$: Peso asociado al stock $i$
-    * $\mu_i$: Retorno esperado del stock $i$
-    * $r$: risk free rate (generalmente $r=0.02$)
-    * $\sigma$ Desviación estándar asociada al portafolio
-                
-### Restricciones
-                
-Para optimizar los pesos de cada stock, mediante el Algoritmo Genético, definimos las siguientes restricciones:
-
-* $\sum_{i=n}^{n}w_i = 1$
-* $w_i \geq 0, i = 1, 2, \dots, n $
-
-* Donde:
-    * $w_i$: Peso asociado al stock $i$
-                ''')
     
-elif tab == 'Prueba Algoritmo Genético':
+    # Generar el frente de Pareto (y = 1/x)
+    pareto_x = np.linspace(0.2, 3, 20)  # Valores de x para el frente de Pareto
+    pareto_y = np.exp(pareto_x)               # Valores de y para el frente
+    frente_pareto = pd.DataFrame({
+        "Funcion_objetivo_1": pareto_x,
+        "Funcion_objetivo_2": pareto_y,
+        "Tipo": ["Pareto"] * len(pareto_x)
+    })
+
+    # Generar soluciones dominadas (arriba o a la derecha del frente de Pareto)
+    soluciones_dominadas_x = np.random.uniform(0.2, 3, 30)  # Más dispersas en x
+    soluciones_dominadas_y =  np.exp(soluciones_dominadas_x) + np.random.uniform(3, 8, 30)  # Arriba del frente
+    soluciones_dominadas = pd.DataFrame({
+        "Funcion_objetivo_1": soluciones_dominadas_x,
+        "Funcion_objetivo_2": soluciones_dominadas_y,
+        "Tipo": ["Dominada"] * len(soluciones_dominadas_x)
+    })
+
+    # Combinar los datos
+    data = pd.concat([frente_pareto, soluciones_dominadas])
+
+    # Crear scatter plot
+    chart_data = data.rename(columns={"Funcion_objetivo_1": "Función Objetivo 1", "Funcion_objetivo_2": "Función Objetivo 2"})
+    scatter_plot = alt.Chart(chart_data).mark_point().encode(
+        x='Función Objetivo 1',
+        y='Función Objetivo 2',
+        color=alt.Color('Tipo', scale=alt.Scale(domain=['Pareto', 'Dominada'], range=['#000000', '#A9A9A9'])),
+    ).interactive()
+
+    st.altair_chart(scatter_plot, use_container_width=True)
+
+elif tab == 'Fórmulas':
+
+    # Retornos
+    st.markdown("### Retornos: ¿Por qué son importantes?")
+    st.markdown("""
+    Los **retornos** representan el **cambio** relativo en el **precio de un stock** en específico en un periodo de **tiempo**.
+    """)
+    with st.expander("Conocer la fórmula"):
+        st.markdown('''
+        **Fórmula:**
+        $\mu_i = \ln{(v_t - v_{t-1})}$
+        
+        **Descripción:**
+        * $\mu_i$: Retorno esperado del stock $i$.
+        * $v_t$: Valor del stock en el tiempo $t$.
+        * $v_{t-1}$: Valor del stock en el tiempo $t-1$.
+        
+        Con estos valores, se construye una matriz de retornos $\Mu$.
+        ''')
+
+    # Riesgo
+    st.markdown("### Riesgo: ¿Qué mide y por qué es crucial?")
+    st.markdown("""
+    El **riesgo** mide la **incertidumbre** asociada a los retornos de los stocks y la relación entre **cada par de stocks**. 
+    Se calcula mediante la matriz de **covarianza**, que captura las correlaciones entre los diferentes activos.
+    """)
+    with st.expander("Conocer la fórmula"):
+        st.markdown('''
+        **Fórmula:**
+        $\Sigma = \mathbb{Cov}(\Mu)$
+
+        **Descripción:**
+        * $\Mu$: Matriz de retornos.
+        * $\Sigma$: Matriz de covarianza de $\Mu$.
+        * $\Sigma_{i, j}$: Covarianza (riesgo conjunto) entre los stocks $i$ y $j$.
+        ''')
+
+    # Métricas del portafolio
+    st.markdown("### Métricas del portafolio: ¿Cómo optimizar retornos y riesgos?")
+    st.markdown("""
+    Estas métricas son clave para evaluar el **desempeño** de un **portafolio** y encontrar el **balance** ideal entre riesgo y retorno.
+    Estas calculan, para cada stock, su **retorno** esperado y, para todos los stocks, el **riesgo** asociado.""")
+    with st.expander("Conocer las fórmulas"):
+        st.markdown('''
+        **1. Retorno de inversión:**
+        $R = \sum_{i=n}^{n}w_i \mu_i$
+
+        * $R$: Retorno de inversión del portafolio.
+        * $w_i$: Peso asociado al stock $i$.
+        * $\mu_i$: Retorno esperado del stock $i$.
+
+        **2. Riesgo asociado:**
+        $\sigma = W \Sigma W^T$
+
+        * $\sigma$: Desviación estándar del portafolio.
+        * $W$: Vector de pesos del portafolio.
+        * $\Sigma$: Matriz de covarianza de $\Mu$.
+
+        **3. Sharpe Ratio:**
+        ${(\sum_{i=n}^{n}w_i \mu_i - r)}/{\sigma}$
+
+        * $r$: Tasa libre de riesgo (por ejemplo, $r=0.02$).
+        * Otras variables como en las fórmulas anteriores.
+        ''')
+
+    # Restricciones
+    st.markdown("### Restricciones: ¿Qué condiciones aseguran un portafolio válido?")
+    st.markdown("""
+    Las restricciones **garantizan** que el **portafolio** cumpla condiciones básicas, como distribuir **correctamente** el **capital** entre los **activos**.
+    """)
+    with st.expander("Conocer las restricciones"):
+        st.markdown('''
+        **Restricciones:**
+        * $\sum_{i=n}^{n}w_i = 1$: La suma de los pesos debe ser 1.
+        * $w_i \geq 0$: Los pesos deben ser positivos (no se permite "short selling").
+
+        Estas condiciones aseguran que el portafolio sea físicamente realizable.
+        ''')
+
+        
+elif tab == 'Prueba AG!':
 
     st.markdown('''
 #### Prueba el algoritmo genético!
