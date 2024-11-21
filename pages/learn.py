@@ -81,7 +81,7 @@ Un concepto clave en la optimización de portafolios es el **frente de Pareto**.
 elif tab == 'Fórmulas':
 
     # Retornos
-    st.markdown("### Retornos: ¿Por qué son importantes?")
+    st.markdown("#### Retornos: ¿Por qué son importantes?")
     st.markdown("""
     Los **retornos** representan el **cambio** relativo en el **precio de un stock** en específico en un periodo de **tiempo**.
     """)
@@ -99,7 +99,7 @@ elif tab == 'Fórmulas':
         ''')
 
     # Riesgo
-    st.markdown("### Riesgo: ¿Qué mide y por qué es crucial?")
+    st.markdown("#### Riesgo: ¿Qué mide y por qué es crucial?")
     st.markdown("""
     El **riesgo** mide la **incertidumbre** asociada a los retornos de los stocks y la relación entre **cada par de stocks**. 
     Se calcula mediante la matriz de **covarianza**, que captura las correlaciones entre los diferentes activos.
@@ -116,7 +116,7 @@ elif tab == 'Fórmulas':
         ''')
 
     # Métricas del portafolio
-    st.markdown("### Métricas del portafolio: ¿Cómo optimizar retornos y riesgos?")
+    st.markdown("#### Métricas del portafolio: ¿Cómo optimizar retornos y riesgos?")
     st.markdown("""
     Estas métricas son clave para evaluar el **desempeño** de un **portafolio** y encontrar el **balance** ideal entre riesgo y retorno.
     Estas calculan, para cada stock, su **retorno** esperado y, para todos los stocks, el **riesgo** asociado.""")
@@ -144,7 +144,7 @@ elif tab == 'Fórmulas':
         ''')
 
     # Restricciones
-    st.markdown("### Restricciones: ¿Qué condiciones aseguran un portafolio válido?")
+    st.markdown("#### Restricciones: ¿Qué condiciones aseguran un portafolio válido?")
     st.markdown("""
     Las restricciones **garantizan** que el **portafolio** cumpla condiciones básicas, como distribuir **correctamente** el **capital** entre los **activos**.
     """)
@@ -222,6 +222,8 @@ En este **ejemplo** sencillo, introduce una palabra que el **algoritmo** deberá
     # Botón para iniciar la simulación
     if st.button("Ejecutar Algoritmo Genético"):
 
+        gens = st.expander('Ver evolución')
+
         # Generación inicial
         population = generate_population(population_size, word_length)
         best_match = ""
@@ -231,8 +233,9 @@ En este **ejemplo** sencillo, introduce una palabra que el **algoritmo** deberá
             best_match = max(population, key=lambda ind: fitness(ind, target_word))
             
             # Imprimir cada N generaciones
-            if (generation + 1) % print_every == 0:
-                st.write(f"**Generación {generation + 1}:** Mejor combinación encontrada: `{best_match}` - Aptitud: {fitness(best_match, target_word)}")
+            with gens:
+                if (generation + 1) % print_every == 0:
+                    st.write(f"**Generación {generation + 1}:** Mejor combinación encontrada: `{best_match}` - Aptitud: {fitness(best_match, target_word)}")
 
             # Condición de parada si encontramos la palabra objetivo
             if best_match == target_word:

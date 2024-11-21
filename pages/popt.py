@@ -311,7 +311,7 @@ def main():
 
             st.bar_chart(single_sol, x = 'Asset', y='Weight', horizontal = True, color='#000000')
 
-            with st.expander('Más información'):
+            with st.expander('¿Qué representa esta gráfica?'):
                 st.markdown('''
                 La gráfica arriba muestra el peso de cada acción en el total del presupuesto del portafolio. Las
                 acciones con más peso son en las que más se deberá invertir el dinero destinado a esta inversión.
@@ -325,9 +325,9 @@ def main():
 
             st.scatter_chart(retris, x = 'Return', y = 'Risk', color='#000000')
 
-            with st.expander('Más información'):
+            with st.expander('¿Qué representa esta gráfica?'):
                 st.markdown('''
-                en la gráfica de arriba, cada punto es una solución diferente en el frente de Pareto estimado, con sus propio retorno y riesgo.
+                En la gráfica de arriba, cada punto es una solución diferente en el frente de Pareto estimado, con sus propio retorno y riesgo.
                 Los puntos más hacia la izquierda y abajo son aquellos con menor riesgo y retorno, y mientras más arriba y 
                 a la derecha, más retorno y riesgo.
                 ''')
