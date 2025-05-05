@@ -34,7 +34,7 @@ def obtain_from_yahoo(years_backwards, tickers = tickers):
     df = pd.DataFrame()
     for ticker in tickers:
         data = yf.download(ticker, start = start_date, end = end_date)
-        df[ticker] = data['Adj Close']
+        df[ticker] = data['Close']
     return df.dropna(axis=1)
 
 def log_returns_covariance_matrix(df):
