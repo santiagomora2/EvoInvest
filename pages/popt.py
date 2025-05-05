@@ -28,7 +28,6 @@ tickers = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'META', 'NVDA', 'BRK-B', 'JN
 
 
 ############ Data functions ##############3
-@st.cache_data
 def obtain_from_yahoo(years_backwards, tickers = tickers):
     end_date = datetime.today()
     start_date = end_date - timedelta(days = years_backwards*365)
