@@ -86,7 +86,7 @@ elif tab == 'Fórmulas':
     Los **retornos** representan el **cambio** relativo en el **precio de un stock** en específico en un periodo de **tiempo**.
     """)
     with st.expander("Conocer la fórmula"):
-        st.markdown('''
+        st.markdown(r'''
         **Fórmula:**
         $\mu_i = \ln{\frac{v_t}{v_{t-1}}}$
         
