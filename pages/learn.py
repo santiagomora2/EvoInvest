@@ -88,7 +88,7 @@ elif tab == 'Fórmulas':
     with st.expander("Conocer la fórmula"):
         st.markdown('''
         **Fórmula:**
-        $\mu_i = \ln{(v_t - v_{t-1})}$
+        $\mu_i = \ln{\frac{v_t}{v_{t-1}}}$
         
         **Descripción:**
         * $\mu_i$: Retorno esperado del stock $i$.
